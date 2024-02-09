@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 
     private int ClickUpgradeValue { get; set; }
 
+    public bool Quiry { get; set; }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,10 +25,16 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach (var gameObject in GameObject.FindGameObjectsWithTag("CoinDisplay"))
+        try
         {
-            gameObject.GetComponent<TMP_Text>().SetText("Coins: " + Coins);
+            foreach (var gameObject in GameObject.FindGameObjectsWithTag("CoinDisplay"))
+            {
+                gameObject.GetComponent<TMP_Text>().SetText("Coins: " + Coins);
+            }
+            GameObject.Find("ClickUpText").GetComponent<TMP_Text>().SetText("+1 Coin Per Click: " + ClickUpgradeValue);
         }
+        catch
+        {}
     }
 
     public void OnCoinClick()
@@ -39,7 +47,10 @@ public class GameManager : MonoBehaviour
         if (Coins >= ClickUpgradeValue)
         {
             ClickValue += 1;
+            Coins -= ClickUpgradeValue;
             ClickUpgradeValue = (int)(ClickUpgradeValue * 1.5f);
+
+            Quiry = true;
         }
     }
 }

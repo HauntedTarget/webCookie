@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class CallManagerEvent : MonoBehaviour
 {
     [SerializeField] List<string> GM_events = null;
+    [SerializeField] UnityEvent SuccessEvent = null, FailEvent = null;
 
     GameManager gameManager = null;
 
@@ -31,11 +32,31 @@ public class CallManagerEvent : MonoBehaviour
             {
                 Debug.Log("Invoking event: " + gmEvent);
                 gameManager.Invoke(gmEvent, 0);
+                Invoke(nameof(After), 0);
             }
         }
         else
         {
             Debug.Log("No events in variable for object: " + gameObject.name);
+        }
+    }
+
+    public void After()
+    {
+        if (gameManager.Quiry)
+        {
+            gameManager.Quiry = false;
+            if (SuccessEvent != null)
+            {
+                SuccessEvent.Invoke();
+            }
+        }
+        else
+        {
+            if (FailEvent != null)
+            {
+                FailEvent.Invoke();
+            }
         }
     }
 
